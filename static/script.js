@@ -2,6 +2,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('calcForm');
     const submitBtn = document.getElementById('submitBtn');
     const resultSection = document.getElementById('resultSection');
+    const tickerInput = document.getElementById('ticker');
+    const amountInput = document.getElementById('amount');
+    const marketRadios = document.getElementsByName('market');
+
+    // Handle Market Selection Change
+    marketRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            if (e.target.value === 'tw') {
+                tickerInput.placeholder = '2330';
+                amountInput.placeholder = '10000';
+                document.querySelector('label[for="amount"]').innerText = '每月投資金額 (TWD)';
+            } else {
+                tickerInput.placeholder = 'AAPL';
+                amountInput.placeholder = '500';
+                document.querySelector('label[for="amount"]').innerText = '每月投資金額 (USD)';
+            }
+        });
+    });
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -12,10 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
         submitBtn.disabled = true;
 
         const formData = {
-            ticker: document.getElementById('ticker').value,
-            amount: document.getElementById('amount').value,
+            ticker: tickerInput.value,
+            amount: amountInput.value,
             start_date: document.getElementById('start_date').value,
-            end_date: document.getElementById('end_date').value
+            end_date: document.getElementById('end_date').value,
+            market: document.querySelector('input[name="market"]:checked').value
         };
 
         try {
@@ -46,30 +65,32 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function displayResults(data) {
-        // Update Summary Cards
-        document.getElementById('totalInvested').innerText = formatCurrency(data.summary.total_invested);
+        const currency = data.summary.currency || 'TWD';
 
-        document.getElementById('finalValuePrice').innerText = formatCurrency(data.summary.final_value_price);
+        // Update Summary Cards
+        document.getElementById('totalInvested').innerText = formatCurrency(data.summary.total_invested, currency);
+
+        document.getElementById('finalValuePrice').innerText = formatCurrency(data.summary.final_value_price, currency);
         const roiPriceElem = document.getElementById('roiPrice');
         roiPriceElem.innerText = `${data.summary.total_roi_price}%`;
         roiPriceElem.style.color = data.summary.total_roi_price >= 0 ? 'var(--success-color)' : 'var(--danger-color)';
 
-        document.getElementById('finalValueDrip').innerText = formatCurrency(data.summary.final_value_drip);
+        document.getElementById('finalValueDrip').innerText = formatCurrency(data.summary.final_value_drip, currency);
         const roiDripElem = document.getElementById('roiDrip');
         roiDripElem.innerText = `${data.summary.total_roi_drip}%`;
         roiDripElem.style.color = data.summary.total_roi_drip >= 0 ? 'var(--success-color)' : 'var(--danger-color)';
 
         // Render Charts
-        renderCharts(data.portfolio);
+        renderCharts(data.portfolio, currency);
     }
 
-    function formatCurrency(value) {
-        return new Intl.NumberFormat('zh-TW', { style: 'currency', currency: 'TWD', maximumFractionDigits: 0 }).format(value);
+    function formatCurrency(value, currency) {
+        return new Intl.NumberFormat('zh-TW', { style: 'currency', currency: currency, maximumFractionDigits: 0 }).format(value);
     }
 
     let charts = {};
 
-    function renderCharts(portfolio) {
+    function renderCharts(portfolio, currency) {
         const labels = portfolio.map(p => p.date);
 
         // Destroy existing charts
@@ -99,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 backgroundColor: 'rgba(187, 134, 252, 0.1)',
                 fill: true
             }
-        ], 'TWD');
+        ], currency);
 
         // 2. Cost vs Price Chart
         createChart('costChart', labels, [
@@ -119,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 pointRadius: 0,
                 fill: false
             }
-        ], 'TWD');
+        ], currency);
 
         // 3. ROI Chart
         createChart('roiChart', labels, [
@@ -180,12 +201,13 @@ document.addEventListener('DOMContentLoaded', () => {
                                 let label = context.dataset.label || '';
                                 if (label) label += ': ';
                                 if (context.parsed.y !== null) {
-                                    if (unit === 'TWD') {
-                                        label += new Intl.NumberFormat('zh-TW', { style: 'currency', currency: 'TWD', maximumFractionDigits: 0 }).format(context.parsed.y);
-                                    } else if (unit === '%') {
+                                    if (unit === '%') {
                                         label += context.parsed.y.toFixed(2) + '%';
-                                    } else {
+                                    } else if (unit === '股') {
                                         label += Math.round(context.parsed.y) + ' ' + unit;
+                                    } else {
+                                        // Dynamic Currency
+                                        label += new Intl.NumberFormat('zh-TW', { style: 'currency', currency: unit, maximumFractionDigits: 0 }).format(context.parsed.y);
                                     }
                                 }
                                 return label;

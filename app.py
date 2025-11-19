@@ -13,19 +13,21 @@ def index():
 @app.route('/api/calculate', methods=['POST'])
 def calculate():
     try:
-        data = request.json
-        ticker = data.get('ticker')
+        data = request.get_json()
+        ticker = data.get('ticker').upper()
         amount = float(data.get('amount'))
         start_date = data.get('start_date')
         end_date = data.get('end_date')
+        market = data.get('market', 'tw')  # Default to 'tw'
 
         if not ticker or not amount or not start_date or not end_date:
             return jsonify({'error': 'Missing required fields'}), 400
 
-        # Add .TW suffix if not present (simple heuristic for TW stocks)
-        if not ticker.endswith('.TW') and not ticker.endswith('.TWO'):
-             # Try .TW first, user can specify suffix if needed
-             ticker = f"{ticker}.TW"
+        # Handle Ticker Suffix based on Market
+        if market == 'tw':
+             if not ticker.endswith('.TW') and not ticker.endswith('.TWO'):
+                 ticker = f"{ticker}.TW"
+        # For US market, use ticker as is
 
         # Fetch data with dividends
         stock = yf.Ticker(ticker)

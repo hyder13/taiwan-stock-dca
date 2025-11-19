@@ -20,6 +20,18 @@
             <section class="input-section">
                 <form id="calcForm">
                     <div class="form-group">
+                        <label>選擇市場</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="market" value="tw" checked> 台股 (Taiwan)
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="market" value="us"> 美股 (US)
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <label for="ticker">股票代號 (例如: 2330)</label>
                         <input type="text" id="ticker" name="ticker" placeholder="2330" required>
                     </div>
