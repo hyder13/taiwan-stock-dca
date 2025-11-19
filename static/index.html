@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>台灣股市定期定額試算</title>
+    <link rel="stylesheet" href="static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>台灣股市定期定額試算</h1>
+            <p>輸入代號、金額與日期，計算歷史回測報酬率</p>
+        </header>
+
+        <main>
+            <section class="input-section">
+                <form id="calcForm">
+                    <div class="form-group">
+                        <label for="ticker">股票代號 (例如: 2330)</label>
+                        <input type="text" id="ticker" name="ticker" placeholder="2330" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="amount">每月投資金額 (TWD)</label>
+                        <input type="number" id="amount" name="amount" placeholder="10000" value="10000" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="start_date">開始日期</label>
+                            <input type="date" id="start_date" name="start_date" value="2008-01-01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="end_date">結束日期</label>
+                            <input type="date" id="end_date" name="end_date" value="2025-01-01" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submitBtn">開始計算</button>
+                </form>
+            </section>
+
+            <section id="resultSection" class="result-section hidden">
+                <div class="summary-cards">
+                    <div class="card">
+                        <h3>總投入金額</h3>
+                        <p id="totalInvested">-</p>
+                    </div>
+                    <div class="card">
+                        <h3>最終資產 (不含息)</h3>
+                        <p id="finalValuePrice">-</p>
+                        <small id="roiPrice" class="roi-small">-</small>
+                    </div>
+                    <div class="card">
+                        <h3>最終資產 (含息)</h3>
+                        <p id="finalValueDrip" class="highlight">-</p>
+                        <small id="roiDrip" class="roi-small">-</small>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <h4>資產成長 (投入成本 vs 市值)</h4>
+                        <div class="canvas-wrapper">
+                            <canvas id="assetChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <h4>DCA 效益 (股價 vs 平均成本)</h4>
+                        <div class="canvas-wrapper">
+                            <canvas id="costChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <h4>報酬率走勢 (ROI %)</h4>
+                        <div class="canvas-wrapper">
+                            <canvas id="roiChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <h4>股數累積 (Total Shares)</h4>
+                        <div class="canvas-wrapper">
+                            <canvas id="sharesChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="static/script.js"></script>
+</body>
+
+</html>
