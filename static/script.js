@@ -13,9 +13,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 tickerInput.placeholder = '2330';
                 amountInput.placeholder = '10000';
                 document.querySelector('label[for="amount"]').innerText = '每月投資金額 (TWD)';
-            } else {
+            } else if (e.target.value === 'us') {
                 tickerInput.placeholder = 'AAPL';
                 amountInput.placeholder = '500';
+                document.querySelector('label[for="amount"]').innerText = '每月投資金額 (USD)';
+            } else {
+                tickerInput.placeholder = 'BTC';
+                amountInput.placeholder = '100';
                 document.querySelector('label[for="amount"]').innerText = '每月投資金額 (USD)';
             }
         });

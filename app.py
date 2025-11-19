@@ -27,6 +27,9 @@ def calculate():
         if market == 'tw':
              if not ticker.endswith('.TW') and not ticker.endswith('.TWO'):
                  ticker = f"{ticker}.TW"
+        elif market == 'crypto':
+            if not ticker.endswith('-USD'):
+                ticker = f"{ticker}-USD"
         # For US market, use ticker as is
 
         # Fetch data with dividends
