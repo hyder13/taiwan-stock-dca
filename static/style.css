@@ -15,6 +15,7 @@
     --border-color: #1e293b;
     --success-color: #10b981;
     --danger-color: #ef4444;
+    --lump-sum-color: #ff4081;
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
     --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
     --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
@@ -275,6 +276,11 @@ button:disabled {
     background-clip: text;
 }
 
+.highlight-lump {
+    color: var(--lump-sum-color);
+    font-weight: bold;
+}
+
 .roi-small {
     display: block;
     font-size: 1.1rem;
@@ -376,4 +382,67 @@ button:disabled {
         height: 320px;
         padding: 20px;
     }
+}
+
+/* Tab Navigation */
+.tabs {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 30px;
+}
+
+.tab-btn {
+    background: transparent;
+    border: 2px solid var(--input-border);
+    color: var(--text-muted);
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: auto;
+    margin-top: 0;
+    box-shadow: none;
+}
+
+.tab-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--text-color);
+    transform: translateY(-2px);
+}
+
+.tab-btn.active {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* Comparison Form */
+.market-select {
+    width: 100%;
+    padding: 14px 18px;
+    background-color: var(--input-bg);
+    border: 2px solid var(--input-border);
+    border-radius: 12px;
+    color: var(--text-color);
+    font-size: 1rem;
+    margin-bottom: 12px;
+    cursor: pointer;
+    outline: none;
+}
+
+.market-select:focus {
+    border-color: var(--primary-color);
+}
+
+/* Full Width Elements */
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.card.full-width {
+    max-width: 600px;
+    margin: 0 auto;
 }
